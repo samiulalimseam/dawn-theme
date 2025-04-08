@@ -2351,10 +2351,11 @@ input[type='checkbox'] {
 }
 
 .header {
-  display: grid;
+  display: flex;
   grid-template-areas: 'left-icons heading icons';
   grid-template-columns: 1fr 2fr 1fr;
   align-items: center;
+  justify-content: space-between;
 }
 
 @media screen and (max-width: 749px) {
@@ -3583,6 +3584,190 @@ details-disclosure > details {
 .progress-bar .progress-bar-value {
   display: block;
 }
+
+
+
+/* added by samiul start */
+div#product-modal {
+  position: sticky;
+  z-index: 99999;
+  background: #ffffff;
+  top: 0%;
+  left: 30%;
+  transform: translate(50%, 50%);
+  width: 311px;
+  height: 265px;
+}
+
+.modal-img {
+  height: 140px;
+  width: 120px;
+  object-fit: contain;
+}
+
+button#modal-close {
+  right: 0;
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  border: none;
+  background: transparent;
+  font-size: 28px;
+}
+
+div#modal-product-info {
+  display: flex;
+  gap: 10px;
+}
+.modal-product-title {
+  font-family: Jost;
+font-weight: 300;
+font-size: 16px;
+line-height: 120%;
+letter-spacing: 0px;
+vertical-align: middle;
+
+}
+.modal-product-price {
+  font-family: Jost;
+  font-weight: 300;
+  font-size: 14px;
+  line-height: 110.00000000000001%;
+  letter-spacing: -1%;
+  
+}
+
+.modal-product-description {
+  font-family: Lustria;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 120%;
+  letter-spacing: 0px;
+  vertical-align: middle;
+  
+}
+
+div#modal-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+  padding: 10px;
+}
+
+button#modal-atc {
+  cursor: pointer;
+  padding: 12px;
+  border: none;
+  background: black;
+  color: white;
+  font-family: Jost;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 20.48px;
+  letter-spacing: 0px;
+  text-align: center;
+  vertical-align: middle;
+  text-transform: uppercase;
+  display: flex;
+      gap: 10px;
+      justify-content: center;
+      align-items: center;
+}
+
+
+img.modal-img.rounded {
+  width: 120px;
+  height: 140px;
+  object-fit: contain;
+}
+.echologyx-section {
+  max-width: var(--page-width);
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+.section-title {
+  font-family: Lustria;
+font-weight: 400;
+font-size: 36px;
+line-height: 120%;
+letter-spacing: 0px;
+vertical-align: middle;
+
+}
+.echologyx-grid{
+  gap: 10px;
+}
+.echologyx-pointer{
+  border: none;
+}
+.heading-message{
+  font-family: Jost;
+font-weight: 400;
+font-size: 16px;
+line-height: 13.42px;
+letter-spacing: 0px;
+text-align: center;
+vertical-align: middle;
+
+}
+.primary-cta {
+  position: relative;
+  cursor: pointer;
+  background-color: #FFF544;
+  padding: 15px 20px;
+  border: none;
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  align-items: center;
+  font-family: Jost;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 20.48px;
+  letter-spacing: 0px;
+  text-align: center;
+  vertical-align: middle;
+  text-transform: uppercase;
+  overflow: hidden;
+  z-index: 1;
+  color: black;
+  transition: color 0.3s ease;
+}
+
+.primary-cta::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background-color: #FFD700; 
+  transition: left 0.4s ease;
+  z-index: 0;
+}
+
+.primary-cta:hover::before {
+  left: 0;
+}
+
+.primary-cta span {
+  position: relative;
+  z-index: 1;
+}
+
+
+/* added by samiul end */
+
+
+
+/* CSS - Hide the product add popdown */
+.product-add-popdown{
+  display: none !important;
+  }
+  /* end */
+  
+   
 
 @keyframes indeterminateAnimation {
   0% {

@@ -1,0 +1,197 @@
+{% stylesheet %}
+  .echologyx-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+  .echologyx-card {
+    position: relative;
+    overflow: hidden;
+  }
+  .echologyx-card img {
+    width: 100%;
+    display: block;
+  }
+  .echologyx-pointer {
+    position: absolute;
+    width: 30px;
+    height: 30px;
+    background: white;
+    border-radius: 50%;
+    border: 2px solid black;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    cursor: pointer;
+    transition: transform 0.2s;
+  }
+  .echologyx-pointer:hover {
+    transform: scale(1.1);
+  }
+{% endstylesheet %}
+
+<div id="product-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+  <div class="modal-overlay"></div>
+  <div class="bg-white p-6 rounded-lg relative max-w-md w-full" id="modal-content">
+    <button id="modal-close" class="absolute top-2 left-2 text-black text-lg font-bold">&times;</button>
+    <div id="modal-product-info" class="space-y-4">
+      <!-- Product content -->
+    </div>
+    <button id="modal-atc" class="bg-black text-white px-4 py-2 rounded mt-4 w-full">Add to Cart</button>
+  </div>
+</div>
+
+<div class="echologyx-section">
+  <h2>{{ section.settings.title }}</h2>
+
+  <div class="echologyx-grid">
+    {% for block in section.blocks %}
+      {% assign product = block.settings.product %}
+      <div class="echologyx-card">
+        {% if block.settings.image %}
+          <img src="{{ block.settings.image | image_url: width: 600 }}" alt="{{ product.title }}">
+        {% endif %}
+        <button
+          href="#"
+          class="echologyx-pointer"
+          data-product-title="{{ product.title | escape }}"
+          data-product-id="{{ product.variants.first.id }}"
+          data-product-image="{{ product.featured_image | image_url: width: 300 }}"
+          data-product-price="{{ product.price | money }}"
+          data-product-description="{{ product.description |  truncate: 55 }}"
+          onclick="openModal(this)"
+          style="top: {{ block.settings.pointer_y }}%; left: {{ block.settings.pointer_x }}%;"
+        >
+          +
+        </button>
+      </div>
+    {% endfor %}
+  </div>
+</div>
+
+<script>
+  function openModal(el) {
+    const modal = document.getElementById('product-modal');
+    const content = document.getElementById('modal-product-info');
+
+    const title = el.dataset.productTitle;
+    const image = el.dataset.productImage;
+    const price = el.dataset.productPrice;
+    const description = el.dataset.productDescription;
+    console.log('dataset', el.dataset);
+
+    content.innerHTML = `
+      <img src="${image}" class="modal-img  rounded ">
+        <div class="product-text-contents" >
+        <h3 class="text-lg font-bold modal-product-title">${title}</h3>     
+      <p class="text-gray-700 modal-product-price">Price: ${price} </p>
+      <p class="text-gray-700 modal-product-description"> ${description}</p>
+        </div>
+      
+    `;
+
+    modal.dataset.variantId = el.dataset.productId;
+    modal.classList.remove('hidden');
+  }
+
+  document.getElementById('modal-close').onclick = () => {
+    document.getElementById('product-modal').classList.add('hidden');
+  };
+
+  document.getElementById('product-modal').addEventListener('click', (e) => {
+    if (e.target.id === 'product-modal') {
+      document.getElementById('product-modal').classList.add('hidden');
+    }
+  });
+
+  document.getElementById('modal-atc').onclick = () => {
+    const variantId = document.getElementById('product-modal').dataset.variantId;
+    fetch('/cart/add.js', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ id: variantId, quantity: 1 }),
+    }).then(() => {
+      document.getElementById('product-modal').classList.add('hidden');
+      const cartDrawer = document.querySelector('cart-drawer');
+      if (cartDrawer) {
+        cartDrawer.open();
+      } else {
+        alert('Added, enable cart drawer to see the changes instantly');
+      }
+    });
+  };
+</script>
+<script>
+  /* Javascript - Show cart drawer when product added to cart */
+  document.addEventListener('theme:cart:popdown', (e) => {
+    const listener = (e) => {
+      document.querySelector('[data-drawer="drawer-cart"]').dispatchEvent(
+        new CustomEvent('theme:drawer:open', {
+          bubbles: false,
+        })
+      );
+      document.removeEventListener('theme:cart:change', listener);
+    };
+    document.addEventListener('theme:cart:change', listener);
+  });
+  /* end */
+</script>
+{% schema %}
+{
+  "name": "Echologyx in the Wild",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Section Title",
+      "default": "Echologyx in the wild"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "image-product",
+      "name": "Grid Item",
+      "settings": [
+        {
+          "type": "product",
+          "id": "product",
+          "label": "Select Product"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Grid Image"
+        },
+        {
+          "type": "range",
+          "id": "pointer_x",
+          "label": "Pointer X Position (%)",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "default": 50
+        },
+        {
+          "type": "range",
+          "id": "pointer_y",
+          "label": "Pointer Y Position (%)",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "default": 50
+        }
+      ]
+    }
+  ],
+  "max_blocks": 12,
+  "presets": [
+    {
+      "name": "Echologyx Image Grid",
+      "category": "Custom"
+    }
+  ]
+}
+{% endschema %}
