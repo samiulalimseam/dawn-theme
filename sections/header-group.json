@@ -8,7 +8,7 @@
         "logo_position": "middle-left",
         "mobile_logo_position": "center",
         "menu": "",
-        "menu_type_desktop": "dropdown",
+        "menu_type_desktop": "drawer",
         "sticky_header_type": "on-scroll-up",
         "show_line_separator": false,
         "show_header_icons": false,
@@ -22,8 +22,8 @@
         "enable_language_selector": true,
         "enable_customer_avatar": true,
         "margin_bottom": 0,
-        "padding_top": 20,
-        "padding_bottom": 20
+        "padding_top": 12,
+        "padding_bottom": 12
       }
     }
   },
